@@ -96,8 +96,8 @@
     .container { padding: 1rem 0.75rem 4rem; }
     .filters { gap: 4px; }
     .filter-btn { padding: 4px 10px; font-size: 11px; }
-    .stickers-row { gap: 3px; padding: 0 8px 10px; }
-    .sticker { width: calc((100% - 27px) / 10); height: auto; aspect-ratio: 1; min-width: 0; font-size: 9px; flex-shrink: 1; }
+    .stickers-row { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; padding: 0 8px 10px; }
+    .sticker { width: auto; height: auto; aspect-ratio: 1; flex-shrink: unset; font-size: 9px; }
   }
 </style>
 </head>
