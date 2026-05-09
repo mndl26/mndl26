@@ -163,32 +163,38 @@ const specials = [
 ];
 
 const groups = {
-  A: [{ name:'México',         iso:'mx' }, { name:'Sudáfrica',       iso:'za' }, { name:'Corea del Sur',  iso:'kr' }, { name:'Chequia',         iso:'cz' }],
-  B: [{ name:'Canadá',         iso:'ca' }, { name:'Qatar',           iso:'qa' }, { name:'Suiza',          iso:'ch' }, { name:'Eslovenia',       iso:'si' }],
-  C: [{ name:'Brasil',         iso:'br' }, { name:'Marruecos',       iso:'ma' }, { name:'Haití',          iso:'ht' }, { name:'Escocia',         iso:'gb-sct' }],
-  D: [{ name:'EE.UU.',         iso:'us' }, { name:'Paraguay',        iso:'py' }, { name:'Australia',      iso:'au' }, { name:'Polonia',         iso:'pl' }],
-  E: [{ name:'Alemania',       iso:'de' }, { name:'Curazao',         iso:'cw' }, { name:'Costa de Marfil',iso:'ci' }, { name:'Ecuador',         iso:'ec' }],
-  F: [{ name:'Países Bajos',   iso:'nl' }, { name:'Japón',           iso:'jp' }, { name:'Túnez',          iso:'tn' }, { name:'Turquía',         iso:'tr' }],
-  G: [{ name:'Bélgica',        iso:'be' }, { name:'Egipto',          iso:'eg' }, { name:'Irán',           iso:'ir' }, { name:'Nueva Zelanda',   iso:'nz' }],
-  H: [{ name:'España',         iso:'es' }, { name:'Cabo Verde',      iso:'cv' }, { name:'Arabia Saudita', iso:'sa' }, { name:'Uruguay',         iso:'uy' }],
-  I: [{ name:'Francia',        iso:'fr' }, { name:'Senegal',         iso:'sn' }, { name:'Irak',           iso:'iq' }, { name:'Noruega',         iso:'no' }],
-  J: [{ name:'Argentina',      iso:'ar' }, { name:'Argelia',         iso:'dz' }, { name:'Austria',        iso:'at' }, { name:'Jordania',        iso:'jo' }],
-  K: [{ name:'Portugal',       iso:'pt' }, { name:'Uzbekistán',      iso:'uz' }, { name:'Colombia',       iso:'co' }, { name:'R.D. del Congo',  iso:'cd' }],
-  L: [{ name:'Inglaterra',     iso:'gb-eng' }, { name:'Croacia',     iso:'hr' }, { name:'Ghana',          iso:'gh' }, { name:'Panamá',          iso:'pa' }],
+  A: [{ name:'México',              iso:'mx' }, { name:'Sudáfrica',         iso:'za' }, { name:'Corea del Sur',    iso:'kr' }, { name:'Chequia',              iso:'cz' }],
+  B: [{ name:'Canadá',              iso:'ca' }, { name:'Bosnia y Herz.',    iso:'ba' }, { name:'Qatar',            iso:'qa' }, { name:'Suiza',                iso:'ch' }],
+  C: [{ name:'Brasil',              iso:'br' }, { name:'Marruecos',         iso:'ma' }, { name:'Haití',            iso:'ht' }, { name:'Escocia',              iso:'gb-sct' }],
+  D: [{ name:'EE.UU.',              iso:'us' }, { name:'Paraguay',          iso:'py' }, { name:'Australia',        iso:'au' }, { name:'Turquía',              iso:'tr' }],
+  E: [{ name:'Alemania',            iso:'de' }, { name:'Curazao',           iso:'cw' }, { name:'Costa de Marfil',  iso:'ci' }, { name:'Ecuador',              iso:'ec' }],
+  F: [{ name:'Países Bajos',        iso:'nl' }, { name:'Japón',             iso:'jp' }, { name:'Suecia',           iso:'se' }, { name:'Túnez',                iso:'tn' }],
+  G: [{ name:'Bélgica',             iso:'be' }, { name:'Egipto',            iso:'eg' }, { name:'Irán',             iso:'ir' }, { name:'Nueva Zelanda',        iso:'nz' }],
+  H: [{ name:'España',              iso:'es' }, { name:'Cabo Verde',        iso:'cv' }, { name:'Arabia Saudita',   iso:'sa' }, { name:'Uruguay',              iso:'uy' }],
+  I: [{ name:'Francia',             iso:'fr' }, { name:'Senegal',           iso:'sn' }, { name:'Irak',             iso:'iq' }, { name:'Noruega',              iso:'no' }],
+  J: [{ name:'Argentina',           iso:'ar' }, { name:'Argelia',           iso:'dz' }, { name:'Austria',          iso:'at' }, { name:'Jordania',             iso:'jo' }],
+  K: [{ name:'Portugal',            iso:'pt' }, { name:'R.D. del Congo',    iso:'cd' }, { name:'Uzbekistán',       iso:'uz' }, { name:'Colombia',             iso:'co' }],
+  L: [{ name:'Inglaterra',          iso:'gb-eng' }, { name:'Croacia',       iso:'hr' }, { name:'Ghana',            iso:'gh' }, { name:'Panamá',               iso:'pa' }],
 };
 
 const stickerLabels = Array.from({length:20}, (_,i) => i === 0 ? 'Escudo' : String(i+1));
 
 let owned = {}, sortMode = 'grupo', activeGroup = 'all';
 
-function loadData() {
+async function loadData() {
   const hash = window.location.hash.slice(1);
-  if (hash.startsWith('share=')) {
-    // Load shared data as starting point, save to local storage so edits persist
-    try { owned = JSON.parse(atob(decodeURIComponent(hash.slice(6)))); } catch(e) { owned = {}; }
-    // Save immediately so refreshing keeps the state
+  if (hash.startsWith('v2=')) {
+    try {
+      const bytes = Uint8Array.from(atob(hash.slice(3)), c => c.charCodeAt(0));
+      const json = await decompress(bytes);
+      owned = JSON.parse(json);
+    } catch(e) { owned = {}; }
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(owned)); } catch(e) {}
-    // Clear hash from URL so subsequent saves don't re-load shared data
+    history.replaceState(null, '', window.location.pathname);
+    document.getElementById('view-notice').classList.add('show');
+  } else if (hash.startsWith('share=')) {
+    try { owned = JSON.parse(atob(decodeURIComponent(hash.slice(6)))); } catch(e) { owned = {}; }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(owned)); } catch(e) {}
     history.replaceState(null, '', window.location.pathname);
     document.getElementById('view-notice').classList.add('show');
   } else {
@@ -200,12 +206,33 @@ function saveData() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(owned)); } catch(e) {}
 }
 
-function shareProg() {
+async function shareProg() {
   try {
+    const json = JSON.stringify(owned);
+    // Compress using DecompressionStream API (available in modern browsers)
+    const compressed = await compress(json);
+    const encoded = btoa(String.fromCharCode(...compressed));
+    const url = window.location.href.split('#')[0] + '#v2=' + encoded;
+    await navigator.clipboard.writeText(url);
+    showToast('✓ Link copiado (' + Math.round(encoded.length/1024*10)/10 + ' KB)');
+  } catch(e) {
+    // Fallback to uncompressed
     const encoded = encodeURIComponent(btoa(JSON.stringify(owned)));
     const url = window.location.href.split('#')[0] + '#share=' + encoded;
-    navigator.clipboard.writeText(url).then(() => showToast('✓ Link copiado — mandáselo a quien quieras'));
-  } catch(e) { showToast('Error al generar el link'); }
+    await navigator.clipboard.writeText(url);
+    showToast('✓ Link copiado');
+  }
+}
+
+async function compress(str) {
+  const stream = new Blob([str]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+  const buf = await new Response(stream).arrayBuffer();
+  return new Uint8Array(buf);
+}
+
+async function decompress(bytes) {
+  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  return await new Response(stream).text();
 }
 
 function resetAll() {
@@ -426,10 +453,11 @@ function buildAll() {
   buildTeams();
 }
 
-loadData();
-buildFilters();
-buildAll();
-updateStats();
+loadData().then(() => {
+  buildFilters();
+  buildAll();
+  updateStats();
+});
 </script>
 </body>
 </html>
