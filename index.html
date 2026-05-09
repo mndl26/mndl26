@@ -78,11 +78,13 @@
   .team-count { font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 999px; background: var(--bg); color: var(--muted); flex-shrink: 0; }
   .team-count.full { background: var(--green-dim); color: var(--green); }
   .stickers-row { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 10px 10px; }
-  .sticker { width: 28px; height: 28px; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.1s; display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--muted); user-select: none; }
+  .sticker { width: 28px; height: 28px; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.1s; display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--muted); user-select: none; position: relative; }
   .sticker:hover { border-color: var(--gold); }
-  .sticker.owned { background: var(--gold); border-color: var(--gold); color: #0a0f1e; font-size: 11px; font-weight: 500; }
+  .sticker.owned { background: var(--green-dim); border-color: var(--green); color: var(--green); font-size: 11px; font-weight: 500; }
   .sticker.is-special { border-style: dashed; border-color: #4a3a1a; }
   .sticker.is-special.owned { border-style: solid; }
+  .sticker .rep-badge { position: absolute; top: -5px; right: -5px; background: var(--gold); color: #0a0f1e; font-size: 8px; font-weight: 700; border-radius: 999px; padding: 0 3px; min-width: 13px; text-align: center; line-height: 13px; display: none; }
+  .sticker.repeated .rep-badge { display: block; }
 
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--gold); color: #0a0f1e; padding: 10px 20px; border-radius: 999px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 999; pointer-events: none; white-space: nowrap; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -213,12 +215,12 @@ function showToast(msg) {
 
 function countTeam(g, idx) {
   let c = 0;
-  for (let s = 0; s < 20; s++) if (owned[`${g}-${idx}-${s}`]) c++;
+  for (let s = 0; s < 20; s++) if ((owned[`${g}-${idx}-${s}`] || 0) >= 1) c++;
   return c;
 }
 
 function updateStats() {
-  const total = Object.values(owned).filter(Boolean).length;
+  const total = Object.values(owned).filter(v => v >= 1).length;
   const pct = Math.round((total / TOTAL) * 100);
   document.getElementById('s-owned').textContent = total;
   document.getElementById('s-missing').textContent = TOTAL - total;
@@ -282,7 +284,7 @@ function buildSpecials() {
   const { wrapper, body, countEl } = makeCollapsible('Figuritas especiales', 'spec-count', 'spec-body', true);
 
   const updateCount = () => {
-    countEl.textContent = `${specials.filter(s => owned[s.id]).length}/${specials.length}`;
+    countEl.textContent = `${specials.filter(s => owned[s.id] >= 1).length}/${specials.length}`;
   };
   updateCount();
 
@@ -291,12 +293,12 @@ function buildSpecials() {
 
   specials.forEach(sp => {
     const card = document.createElement('div');
-    card.className = 'special-card' + (owned[sp.id] ? ' owned' : '');
+    card.className = 'special-card' + ((owned[sp.id] || 0) >= 1 ? ' owned' : '');
     card.innerHTML = `<span class="sc-icon">${sp.icon}</span><span class="sc-name">${sp.name}</span><span class="sc-check">✓</span>`;
     if (!readOnly) {
       card.onclick = () => {
-        owned[sp.id] = !owned[sp.id];
-        card.classList.toggle('owned', owned[sp.id]);
+        owned[sp.id] = (owned[sp.id] || 0) >= 1 ? 0 : 1;
+        card.classList.toggle('owned', owned[sp.id] >= 1);
         saveData(); updateStats(); updateCount();
       };
     }
@@ -361,19 +363,30 @@ function buildTeamCard(g, idx, name, flag) {
   for (let s = 0; s < 20; s++) {
     const key = `${g}-${idx}-${s}`;
     const el = document.createElement('div');
-    el.className = 'sticker' + (s === 0 ? ' is-special' : '') + (owned[key] ? ' owned' : '');
+    const label = s === 0 ? '🛡' : String(s + 1);
+    const cnt = owned[key] || 0;
+    el.className = 'sticker' + (s === 0 ? ' is-special' : '') + (cnt >= 1 ? ' owned' : '') + (cnt >= 2 ? ' repeated' : '');
     el.title = stickerLabels[s];
-    el.textContent = owned[key] ? '✓' : (s === 0 ? '🛡' : s + 1);
+    el.innerHTML = `${label}<span class="rep-badge">${cnt >= 2 ? '+' + (cnt - 1) : ''}</span>`;
     if (!readOnly) {
-      el.onclick = () => {
-        owned[key] = !owned[key];
-        el.classList.toggle('owned', owned[key]);
-        el.textContent = owned[key] ? '✓' : (s === 0 ? '🛡' : s + 1);
+      const updateEl = () => {
+        const newCnt = owned[key] || 0;
+        el.className = 'sticker' + (s === 0 ? ' is-special' : '') + (newCnt >= 1 ? ' owned' : '') + (newCnt >= 2 ? ' repeated' : '');
+        el.innerHTML = `${label}<span class="rep-badge">${newCnt >= 2 ? '+' + (newCnt - 1) : ''}</span>`;
         saveData(); updateStats();
         const nc = countTeam(g, idx);
         const ce = document.getElementById(`cnt-${g}-${idx}`);
         if (ce) { ce.textContent = nc+'/20'; ce.className = 'team-count'+(nc===20?' full':''); }
         card.className = 'team-card'+(nc===20?' complete':'');
+      };
+      el.onclick = () => {
+        owned[key] = (owned[key] || 0) >= 6 ? 0 : (owned[key] || 0) + 1;
+        updateEl();
+      };
+      el.oncontextmenu = (e) => {
+        e.preventDefault();
+        owned[key] = (owned[key] || 0) <= 0 ? 0 : (owned[key] || 0) - 1;
+        updateEl();
       };
     }
     row.appendChild(el);
