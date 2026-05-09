@@ -7,377 +7,197 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0f1e;
-    --surface: #111827;
-    --card: #1a2235;
-    --border: #2a3548;
-    --text: #f0f4ff;
-    --muted: #7a8aaa;
-    --gold: #f5c842;
-    --gold-dim: #3a2e0a;
-    --green: #22c55e;
-    --green-dim: #052a13;
-    --radius: 10px;
+    --bg: #0a0f1e; --surface: #111827; --card: #1a2235; --border: #2a3548;
+    --text: #f0f4ff; --muted: #7a8aaa; --gold: #f5c842; --gold-dim: #3a2e0a;
+    --green: #22c55e; --green-dim: #052a13; --radius: 10px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  .topbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 2px;
-    color: var(--gold);
-    line-height: 1;
-  }
-
-  .logo span { color: var(--text); font-size: 14px; letter-spacing: 1px; display: block; margin-top: 1px; }
-
+  .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; position: sticky; top: 0; z-index: 100; }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--gold); line-height: 1; }
+  .logo span { color: var(--text); font-size: 13px; letter-spacing: 1px; display: block; margin-top: 1px; }
   .topbar-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-
-  .btn {
-    padding: 7px 16px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    font-size: 13px;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    background: var(--card);
-    color: var(--text);
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
+  .btn { padding: 7px 16px; border-radius: var(--radius); border: 1px solid var(--border); font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; background: var(--card); color: var(--text); transition: all 0.15s; white-space: nowrap; }
   .btn:hover { border-color: var(--gold); color: var(--gold); }
-  .btn-share {
-    background: var(--gold);
-    color: #0a0f1e;
-    border-color: var(--gold);
-    font-weight: 500;
-  }
-  .btn-share:hover { background: #e0b520; color: #0a0f1e; border-color: #e0b520; }
+  .btn-share { background: var(--gold); color: #0a0f1e; border-color: var(--gold); font-weight: 500; }
+  .btn-share:hover { background: #e0b520; }
 
-  .view-notice {
-    background: #1a1200;
-    border-bottom: 1px solid var(--gold-dim);
-    padding: 10px 1.5rem;
-    font-size: 13px;
-    color: var(--gold);
-    display: none;
-    align-items: center;
-    gap: 8px;
-  }
-  .view-notice.show { display: flex; }
+  .view-notice { background: #1a1200; border-bottom: 1px solid var(--gold-dim); padding: 10px 1.5rem; font-size: 13px; color: var(--gold); display: none; }
+  .view-notice.show { display: block; }
 
-  .container { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+  .container { max-width: 920px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
 
-  .progress-section { margin-bottom: 2rem; }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 8px;
-    margin-bottom: 1rem;
-  }
-
-  .stat-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px;
-    text-align: center;
-  }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-bottom: 1rem; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; text-align: center; }
   .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--gold); line-height: 1; }
   .stat-label { font-size: 11px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-  .progress-bar { background: var(--border); border-radius: 999px; height: 6px; overflow: hidden; }
+  .progress-bar { background: var(--border); border-radius: 999px; height: 5px; overflow: hidden; margin-bottom: 1.5rem; }
   .progress-fill { height: 100%; background: var(--gold); border-radius: 999px; transition: width 0.4s; }
 
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 1.5rem;
-  }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; align-items: center; }
+  .search-input { flex: 1; min-width: 180px; padding: 8px 13px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none; }
+  .search-input::placeholder { color: var(--muted); }
+  .search-input:focus { border-color: var(--gold); }
+  .sort-btn { padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border); font-size: 12px; cursor: pointer; background: var(--card); color: var(--muted); transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+  .sort-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
 
-  .filter-btn {
-    padding: 5px 13px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    font-size: 12px;
-    cursor: pointer;
-    background: var(--card);
-    color: var(--muted);
-    transition: all 0.15s;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .filter-btn:hover, .filter-btn.active {
-    background: var(--gold-dim);
-    border-color: var(--gold);
-    color: var(--gold);
-  }
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
+  .filter-btn { padding: 5px 13px; border-radius: 999px; border: 1px solid var(--border); font-size: 12px; cursor: pointer; background: var(--card); color: var(--muted); transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+  .filter-btn:hover, .filter-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
 
-  .search-wrap { margin-bottom: 1rem; }
-  .search-wrap input {
-    width: 100%;
-    padding: 9px 14px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--text);
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .search-wrap input::placeholder { color: var(--muted); }
-  .search-wrap input:focus { border-color: var(--gold); }
+  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 0 10px; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
+  .section-header:hover .sec-title { color: var(--gold); }
+  .sec-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--text); transition: color 0.15s; }
+  .sec-meta { display: flex; align-items: center; gap: 10px; }
+  .sec-count { font-size: 12px; color: var(--muted); }
+  .chevron { font-size: 14px; color: var(--muted); transition: transform 0.25s; display: inline-block; }
+  .chevron.open { transform: rotate(180deg); }
+  .sec-body { overflow: hidden; transition: max-height 0.35s ease, opacity 0.25s; }
+  .sec-body.open { max-height: 3000px; opacity: 1; }
+  .sec-body.closed { max-height: 0; opacity: 0; pointer-events: none; }
 
-  .group-section { margin-bottom: 2.5rem; }
+  .special-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 8px; padding: 12px 0 20px; }
+  .special-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 11px 13px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 10px; user-select: none; }
+  .special-card:hover { border-color: #3a4a6a; }
+  .special-card.owned { background: var(--gold-dim); border-color: var(--gold); }
+  .special-card.owned .sc-name { color: var(--gold); }
+  .sc-icon { font-size: 20px; flex-shrink: 0; }
+  .sc-name { font-size: 12px; color: var(--text); line-height: 1.3; flex: 1; }
+  .sc-check { font-size: 13px; color: var(--gold); opacity: 0; flex-shrink: 0; }
+  .special-card.owned .sc-check { opacity: 1; }
 
-  .group-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .group-label {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    color: var(--gold);
-    letter-spacing: 2px;
-  }
-
-  .group-progress { font-size: 12px; color: var(--muted); margin-left: auto; }
-
-  .teams-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: 8px;
-  }
-
-  .team-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition: border-color 0.15s;
-  }
+  .group-label { font-size: 12px; font-weight: 500; color: var(--muted); margin: 1.2rem 0 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 8px; }
+  .team-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.15s; }
   .team-card:hover { border-color: #3a4a6a; }
   .team-card.complete { border-color: #1a4a2a; }
-
-  .team-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px 8px;
-    cursor: pointer;
-    user-select: none;
-  }
-
+  .team-header { display: flex; align-items: center; gap: 8px; padding: 10px 12px 8px; }
   .team-flag { font-size: 20px; flex-shrink: 0; }
   .team-name { font-size: 13px; font-weight: 500; flex: 1; line-height: 1.2; }
-
-  .team-count {
-    font-size: 11px;
-    font-weight: 500;
-    padding: 2px 7px;
-    border-radius: 999px;
-    background: var(--bg);
-    color: var(--muted);
-    flex-shrink: 0;
-  }
-
+  .team-count { font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 999px; background: var(--bg); color: var(--muted); flex-shrink: 0; }
   .team-count.full { background: var(--green-dim); color: var(--green); }
-
-  .stickers-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    padding: 0 10px 10px;
-  }
-
-  .sticker {
-    width: 28px;
-    height: 28px;
-    border-radius: 5px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    cursor: pointer;
-    transition: all 0.1s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
-    color: var(--muted);
-    user-select: none;
-  }
-
+  .stickers-row { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 10px 10px; }
+  .sticker { width: 28px; height: 28px; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.1s; display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--muted); user-select: none; }
   .sticker:hover { border-color: var(--gold); }
   .sticker.owned { background: var(--gold); border-color: var(--gold); color: #0a0f1e; font-size: 11px; font-weight: 500; }
-  .sticker.special { border-color: #4a3a1a; }
-  .sticker.special.owned { background: linear-gradient(135deg, var(--gold), #ff9f1a); }
+  .sticker.is-special { border-style: dashed; border-color: #4a3a1a; }
+  .sticker.is-special.owned { border-style: solid; }
 
-  .sticker-labels {
-    display: flex;
-    gap: 4px;
-    padding: 0 10px 8px;
-    flex-wrap: wrap;
-  }
-  .sticker-type {
-    font-size: 10px;
-    color: var(--muted);
-    background: var(--bg);
-    padding: 1px 6px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-  }
-
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--gold);
-    color: #0a0f1e;
-    padding: 10px 20px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 500;
-    opacity: 0;
-    transition: all 0.3s;
-    z-index: 999;
-    pointer-events: none;
-    white-space: nowrap;
-  }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--gold); color: #0a0f1e; padding: 10px 20px; border-radius: 999px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 999; pointer-events: none; white-space: nowrap; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  .readonly-badge {
-    font-size: 11px;
-    background: #1a1a3a;
-    color: #8888cc;
-    border: 1px solid #2a2a5a;
-    padding: 3px 10px;
-    border-radius: 999px;
-  }
 
   @media (max-width: 480px) {
     .teams-grid { grid-template-columns: 1fr 1fr; }
+    .special-grid { grid-template-columns: 1fr 1fr; }
     .topbar { padding: 0.75rem 1rem; }
   }
 </style>
 </head>
 <body>
-
 <div class="topbar">
-  <div class="logo">
-    Panini <span>Mundial 2026™</span>
-  </div>
+  <div class="logo">Panini <span>Mundial 2026™</span></div>
   <div class="topbar-right">
-    <span class="readonly-badge" id="readonly-badge" style="display:none">👁 Modo vista</span>
+    <span id="readonly-badge" style="display:none;font-size:11px;background:#1a1a3a;color:#8888cc;border:1px solid #2a2a5a;padding:3px 10px;border-radius:999px;">👁 Modo vista</span>
     <button class="btn" onclick="resetAll()" id="btn-reset">Borrar todo</button>
-    <button class="btn btn-share" onclick="shareProg()" id="btn-share">⬆ Compartir mi álbum</button>
+    <button class="btn btn-share" onclick="shareProg()" id="btn-share">⬆ Compartir álbum</button>
   </div>
 </div>
-
-<div class="view-notice" id="view-notice">
-  👁 Estás viendo el álbum de otra persona. <strong style="margin-left:4px">Solo podés mirar, no editar.</strong>
-</div>
+<div class="view-notice" id="view-notice">👁 Estás viendo el álbum de otra persona — solo podés mirar, no editar.</div>
 
 <div class="container">
-
-  <div class="progress-section">
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-num" id="stat-owned">0</div><div class="stat-label">Tengo</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-missing">980</div><div class="stat-label">Me faltan</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-pct">0%</div><div class="stat-label">Completado</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-teams">0</div><div class="stat-label">Selecciones completas</div></div>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num" id="s-owned">0</div><div class="stat-label">Tengo</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-missing">980</div><div class="stat-label">Me faltan</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-pct">0%</div><div class="stat-label">Completado</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-teams">0/48</div><div class="stat-label">Selecciones</div></div>
   </div>
-
-  <div class="search-wrap">
-    <input type="text" id="search" placeholder="Buscar selección..." oninput="filterTeams()">
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+  <div class="controls">
+    <input type="text" class="search-input" id="search" placeholder="🔍 Buscar selección..." oninput="buildTeams()">
+    <button class="sort-btn active" id="sort-grupo" onclick="setSort('grupo')">Por grupo</button>
+    <button class="sort-btn" id="sort-alfa" onclick="setSort('alfa')">A–Z</button>
   </div>
-
   <div class="filters" id="filters"></div>
-
   <div id="album"></div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-const STORAGE_KEY = 'panini-2026-v1';
+const STORAGE_KEY = 'panini-2026-v3';
 const TOTAL = 980;
 
+const specials = [
+  { id:'s-portada',  icon:'📖', name:'Portada oficial' },
+  { id:'s-trofeo',   icon:'🏆', name:'Trofeo Copa del Mundo' },
+  { id:'s-emblema',  icon:'⭐', name:'Emblema oficial 2026' },
+  { id:'s-mascota1', icon:'🦅', name:'Mascota oficial 1' },
+  { id:'s-mascota2', icon:'🦅', name:'Mascota oficial 2' },
+  { id:'s-pelota',   icon:'⚽', name:'Pelota oficial' },
+  { id:'s-hist1',    icon:'📜', name:'Historia del Mundial 1' },
+  { id:'s-hist2',    icon:'📜', name:'Historia del Mundial 2' },
+  { id:'s-hist3',    icon:'📜', name:'Historia del Mundial 3' },
+  { id:'s-hist4',    icon:'📜', name:'Historia del Mundial 4' },
+  { id:'s-hist5',    icon:'📜', name:'Historia del Mundial 5' },
+  { id:'s-hist6',    icon:'📜', name:'Historia del Mundial 6' },
+  { id:'s-camp',     icon:'🥇', name:'Campeones históricos' },
+  { id:'s-rec1',     icon:'🏅', name:'Récords del torneo 1' },
+  { id:'s-rec2',     icon:'🏅', name:'Récords del torneo 2' },
+  { id:'s-cam1',     icon:'🗺️', name:'Camino al Mundial 1' },
+  { id:'s-cam2',     icon:'🗺️', name:'Camino al Mundial 2' },
+  { id:'s-cam3',     icon:'🗺️', name:'Camino al Mundial 3' },
+  { id:'s-cam4',     icon:'🗺️', name:'Camino al Mundial 4' },
+  { id:'s-cal1',     icon:'📅', name:'Calendario de partidos 1' },
+  { id:'s-cal2',     icon:'📅', name:'Calendario de partidos 2' },
+  { id:'s-cal3',     icon:'📅', name:'Calendario de partidos 3' },
+  { id:'s-est1',     icon:'🏟️', name:'Estadio Azteca (MEX)' },
+  { id:'s-est2',     icon:'🏟️', name:'Estadio Akron (MEX)' },
+  { id:'s-est3',     icon:'🏟️', name:'Estadio BBVA Guadalajara (MEX)' },
+  { id:'s-est4',     icon:'🏟️', name:'BC Place (CAN)' },
+  { id:'s-est5',     icon:'🏟️', name:'BMO Field (CAN)' },
+  { id:'s-est6',     icon:'🏟️', name:'SoFi Stadium (USA)' },
+  { id:'s-est7',     icon:'🏟️', name:'MetLife Stadium (USA)' },
+  { id:'s-est8',     icon:'🏟️', name:'AT&T Stadium (USA)' },
+  { id:'s-est9',     icon:'🏟️', name:'Arrowhead Stadium (USA)' },
+  { id:'s-est10',    icon:'🏟️', name:'Levi\'s Stadium (USA)' },
+  { id:'s-est11',    icon:'🏟️', name:'Rose Bowl (USA)' },
+  { id:'s-est12',    icon:'🏟️', name:'NRG Stadium (USA)' },
+  { id:'s-est13',    icon:'🏟️', name:'Gillette Stadium (USA)' },
+  { id:'s-est14',    icon:'🏟️', name:'Lincoln Financial Field (USA)' },
+  { id:'s-est15',    icon:'🏟️', name:'Mercedes-Benz Stadium (USA)' },
+  { id:'s-est16',    icon:'🏟️', name:'Estadio BBVA (USA)' },
+];
+
 const groups = {
-  A: { teams: ['México','Sudáfrica','Corea del Sur','Rep. UEFA D*'], flags: ['🇲🇽','🇿🇦','🇰🇷','🏳️'] },
-  B: { teams: ['Canadá','Qatar','Suiza','Rep. UEFA 1*'], flags: ['🇨🇦','🇶🇦','🇨🇭','🏳️'] },
-  C: { teams: ['Brasil','Marruecos','Haití','Escocia'], flags: ['🇧🇷','🇲🇦','🇭🇹','🏴󠁧󠁢󠁳󠁣󠁴󠁿'] },
-  D: { teams: ['EE.UU.','Paraguay','Australia','Rep. UEFA 3*'], flags: ['🇺🇸','🇵🇾','🇦🇺','🏳️'] },
-  E: { teams: ['Alemania','Curazao','Costa de Marfil','Ecuador'], flags: ['🇩🇪','🇨🇼','🇨🇮','🇪🇨'] },
-  F: { teams: ['Países Bajos','Japón','Túnez','Rep. UEFA 2*'], flags: ['🇳🇱','🇯🇵','🇹🇳','🏳️'] },
-  G: { teams: ['Bélgica','Egipto','Irán','Nueva Zelanda'], flags: ['🇧🇪','🇪🇬','🇮🇷','🇳🇿'] },
-  H: { teams: ['España','Cabo Verde','Arabia Saudita','Uruguay'], flags: ['🇪🇸','🇨🇻','🇸🇦','🇺🇾'] },
-  I: { teams: ['Francia','Senegal','Rep. Intercon. 2*','Noruega'], flags: ['🇫🇷','🇸🇳','🏳️','🇳🇴'] },
-  J: { teams: ['Argentina','Argelia','Austria','Jordania'], flags: ['🇦🇷','🇩🇿','🇦🇹','🇯🇴'] },
-  K: { teams: ['Portugal','Uzbekistán','Colombia','Rep. Intercon. 1*'], flags: ['🇵🇹','🇺🇿','🇨🇴','🏳️'] },
-  L: { teams: ['Inglaterra','Croacia','Ghana','Panamá'], flags: ['🏴󠁧󠁢󠁥󠁮󠁧󠁿','🇭🇷','🇬🇭','🇵🇦'] },
+  A: [{ name:'México',         flag:'🇲🇽' }, { name:'Sudáfrica',       flag:'🇿🇦' }, { name:'Corea del Sur',  flag:'🇰🇷' }, { name:'Chequia',         flag:'🇨🇿' }],
+  B: [{ name:'Canadá',         flag:'🇨🇦' }, { name:'Qatar',           flag:'🇶🇦' }, { name:'Suiza',          flag:'🇨🇭' }, { name:'Eslovenia',       flag:'🇸🇮' }],
+  C: [{ name:'Brasil',         flag:'🇧🇷' }, { name:'Marruecos',       flag:'🇲🇦' }, { name:'Haití',          flag:'🇭🇹' }, { name:'Escocia',         flag:'🏴󠁧󠁢󠁳󠁣󠁴󠁿' }],
+  D: [{ name:'EE.UU.',         flag:'🇺🇸' }, { name:'Paraguay',        flag:'🇵🇾' }, { name:'Australia',      flag:'🇦🇺' }, { name:'Polonia',         flag:'🇵🇱' }],
+  E: [{ name:'Alemania',       flag:'🇩🇪' }, { name:'Curazao',         flag:'🇨🇼' }, { name:'Costa de Marfil',flag:'🇨🇮' }, { name:'Ecuador',         flag:'🇪🇨' }],
+  F: [{ name:'Países Bajos',   flag:'🇳🇱' }, { name:'Japón',           flag:'🇯🇵' }, { name:'Túnez',          flag:'🇹🇳' }, { name:'Turquía',         flag:'🇹🇷' }],
+  G: [{ name:'Bélgica',        flag:'🇧🇪' }, { name:'Egipto',          flag:'🇪🇬' }, { name:'Irán',           flag:'🇮🇷' }, { name:'Nueva Zelanda',   flag:'🇳🇿' }],
+  H: [{ name:'España',         flag:'🇪🇸' }, { name:'Cabo Verde',      flag:'🇨🇻' }, { name:'Arabia Saudita', flag:'🇸🇦' }, { name:'Uruguay',         flag:'🇺🇾' }],
+  I: [{ name:'Francia',        flag:'🇫🇷' }, { name:'Senegal',         flag:'🇸🇳' }, { name:'Irak',           flag:'🇮🇶' }, { name:'Noruega',         flag:'🇳🇴' }],
+  J: [{ name:'Argentina',      flag:'🇦🇷' }, { name:'Argelia',         flag:'🇩🇿' }, { name:'Austria',        flag:'🇦🇹' }, { name:'Jordania',        flag:'🇯🇴' }],
+  K: [{ name:'Portugal',       flag:'🇵🇹' }, { name:'Uzbekistán',      flag:'🇺🇿' }, { name:'Colombia',       flag:'🇨🇴' }, { name:'R.D. del Congo',  flag:'🇨🇩' }],
+  L: [{ name:'Inglaterra',     flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿' }, { name:'Croacia',         flag:'🇭🇷' }, { name:'Ghana',          flag:'🇬🇭' }, { name:'Panamá',          flag:'🇵🇦' }],
 };
 
-// Each team: escudo(1) + foto grupal(1) + jugadores(18) = 20 stickers
-const STICKERS_PER_TEAM = 20;
-// Extras: special stickers for stadiums, history, mascot, trophy, Coca-Cola, etc.
-// Distribute remaining stickers (980 - 48*20 = 20) as special section
-// We model each team as 20 stickers: [escudo, foto, j1..j18]
+const stickerLabels = ['🛡 Escudo', '📸 Foto grupal', ...Array.from({length:18}, (_,i) => `J${i+1}`)];
 
-function teamKey(group, idx) { return `${group}-${idx}`; }
-function stickerKey(group, idx, s) { return `${group}-${idx}-${s}`; }
-
-let owned = {};
-let readOnly = false;
-let activeFilter = 'all';
+let owned = {}, readOnly = false, sortMode = 'grupo', activeGroup = 'all';
 
 function loadData() {
   const hash = window.location.hash.slice(1);
   if (hash.startsWith('share=')) {
     readOnly = true;
-    try {
-      const decoded = atob(hash.slice(6));
-      owned = JSON.parse(decoded);
-    } catch(e) { owned = {}; }
+    try { owned = JSON.parse(atob(decodeURIComponent(hash.slice(6)))); } catch(e) { owned = {}; }
     document.getElementById('view-notice').classList.add('show');
     document.getElementById('readonly-badge').style.display = 'inline';
     document.getElementById('btn-share').style.display = 'none';
     document.getElementById('btn-reset').style.display = 'none';
   } else {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) owned = JSON.parse(raw);
-    } catch(e) { owned = {}; }
+    try { const r = localStorage.getItem(STORAGE_KEY); if (r) owned = JSON.parse(r); } catch(e) { owned = {}; }
   }
 }
 
@@ -388,188 +208,225 @@ function saveData() {
 
 function shareProg() {
   try {
-    const encoded = btoa(JSON.stringify(owned));
+    const encoded = encodeURIComponent(btoa(JSON.stringify(owned)));
     const url = window.location.href.split('#')[0] + '#share=' + encoded;
-    navigator.clipboard.writeText(url).then(() => showToast('✓ Link copiado al portapapeles'));
-  } catch(e) {
-    showToast('Error al generar el link');
-  }
+    navigator.clipboard.writeText(url).then(() => showToast('✓ Link copiado — mandáselo a quien quieras'));
+  } catch(e) { showToast('Error al generar el link'); }
 }
 
 function resetAll() {
   if (readOnly) return;
   if (!confirm('¿Borrar todo el progreso?')) return;
-  owned = {};
-  localStorage.removeItem(STORAGE_KEY);
-  document.querySelectorAll('.sticker').forEach(el => el.classList.remove('owned'));
-  updateStats();
+  owned = {}; localStorage.removeItem(STORAGE_KEY);
+  buildAll(); updateStats();
 }
 
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-function countOwned(group, idx) {
+function countTeam(g, idx) {
   let c = 0;
-  for (let s = 0; s < STICKERS_PER_TEAM; s++) {
-    if (owned[stickerKey(group, idx, s)]) c++;
-  }
+  for (let s = 0; s < 20; s++) if (owned[`${g}-${idx}-${s}`]) c++;
   return c;
 }
 
 function updateStats() {
   const total = Object.values(owned).filter(Boolean).length;
   const pct = Math.round((total / TOTAL) * 100);
-  document.getElementById('stat-owned').textContent = total;
-  document.getElementById('stat-missing').textContent = TOTAL - total;
-  document.getElementById('stat-pct').textContent = pct + '%';
+  document.getElementById('s-owned').textContent = total;
+  document.getElementById('s-missing').textContent = TOTAL - total;
+  document.getElementById('s-pct').textContent = pct + '%';
   document.getElementById('prog').style.width = pct + '%';
+  let ct = 0;
+  Object.entries(groups).forEach(([g, teams]) => teams.forEach((_, i) => { if (countTeam(g, i) === 20) ct++; }));
+  document.getElementById('s-teams').textContent = ct + '/48';
+}
 
-  let completedTeams = 0;
-  Object.entries(groups).forEach(([g, gdata]) => {
-    gdata.teams.forEach((_, idx) => {
-      if (countOwned(g, idx) === STICKERS_PER_TEAM) completedTeams++;
-    });
-  });
-  document.getElementById('stat-teams').textContent = completedTeams;
+function setSort(mode) {
+  sortMode = mode;
+  document.getElementById('sort-grupo').classList.toggle('active', mode === 'grupo');
+  document.getElementById('sort-alfa').classList.toggle('active', mode === 'alfa');
+  buildTeams();
+}
 
-  // Update team counts
-  Object.entries(groups).forEach(([g, gdata]) => {
-    gdata.teams.forEach((_, idx) => {
-      const c = countOwned(g, idx);
-      const countEl = document.getElementById(`count-${g}-${idx}`);
-      const cardEl = document.getElementById(`card-${g}-${idx}`);
-      if (countEl) {
-        countEl.textContent = `${c}/20`;
-        countEl.className = 'team-count' + (c === STICKERS_PER_TEAM ? ' full' : '');
-      }
-      if (cardEl) cardEl.className = 'team-card' + (c === STICKERS_PER_TEAM ? ' complete' : '');
-    });
+function makeCollapsible(titleText, countId, bodyId, startOpen) {
+  const wrapper = document.createElement('div');
+  wrapper.style.marginBottom = '8px';
+
+  const header = document.createElement('div');
+  header.className = 'section-header';
+
+  const title = document.createElement('span');
+  title.className = 'sec-title';
+  title.textContent = titleText;
+
+  const meta = document.createElement('div');
+  meta.className = 'sec-meta';
+  const countEl = document.createElement('span');
+  countEl.className = 'sec-count';
+  countEl.id = countId;
+  const chev = document.createElement('span');
+  chev.className = 'chevron' + (startOpen ? ' open' : '');
+  chev.textContent = '▼';
+
+  meta.appendChild(countEl);
+  meta.appendChild(chev);
+  header.appendChild(title);
+  header.appendChild(meta);
+
+  const body = document.createElement('div');
+  body.className = 'sec-body ' + (startOpen ? 'open' : 'closed');
+  body.id = bodyId;
+
+  let isOpen = startOpen;
+  header.onclick = () => {
+    isOpen = !isOpen;
+    body.classList.toggle('open', isOpen);
+    body.classList.toggle('closed', !isOpen);
+    chev.classList.toggle('open', isOpen);
+  };
+
+  wrapper.appendChild(header);
+  wrapper.appendChild(body);
+  return { wrapper, body, countEl };
+}
+
+function buildSpecials() {
+  const { wrapper, body, countEl } = makeCollapsible('Figuritas especiales', 'spec-count', 'spec-body', true);
+
+  const updateCount = () => {
+    countEl.textContent = `${specials.filter(s => owned[s.id]).length}/${specials.length}`;
+  };
+  updateCount();
+
+  const grid = document.createElement('div');
+  grid.className = 'special-grid';
+
+  specials.forEach(sp => {
+    const card = document.createElement('div');
+    card.className = 'special-card' + (owned[sp.id] ? ' owned' : '');
+    card.innerHTML = `<span class="sc-icon">${sp.icon}</span><span class="sc-name">${sp.name}</span><span class="sc-check">✓</span>`;
+    if (!readOnly) {
+      card.onclick = () => {
+        owned[sp.id] = !owned[sp.id];
+        card.classList.toggle('owned', owned[sp.id]);
+        saveData(); updateStats(); updateCount();
+      };
+    }
+    grid.appendChild(card);
   });
+
+  body.appendChild(grid);
+  document.getElementById('album').appendChild(wrapper);
+}
+
+function buildTeams() {
+  const existing = document.getElementById('teams-wrap');
+  if (existing) existing.remove();
+
+  const { wrapper, body, countEl } = makeCollapsible('Selecciones', 'teams-count', 'teams-body', true);
+  wrapper.id = 'teams-wrap';
+  countEl.textContent = '48 equipos · 20 figuritas c/u';
+
+  const q = document.getElementById('search').value.toLowerCase();
+
+  const appendTeamGrid = (teams) => {
+    const grid = document.createElement('div');
+    grid.className = 'teams-grid';
+    teams.forEach(t => grid.appendChild(buildTeamCard(t.g, t.idx, t.name, t.flag)));
+    body.appendChild(grid);
+  };
+
+  if (sortMode === 'alfa') {
+    let all = [];
+    Object.entries(groups).forEach(([g, teams]) => teams.forEach((t, idx) => all.push({ g, idx, ...t })));
+    all.sort((a, b) => a.name.localeCompare(b.name, 'es'));
+    if (activeGroup !== 'all') all = all.filter(t => t.g === activeGroup);
+    if (q) all = all.filter(t => t.name.toLowerCase().includes(q));
+    body.style.paddingTop = '12px';
+    appendTeamGrid(all);
+  } else {
+    Object.entries(groups).forEach(([g, teams]) => {
+      if (activeGroup !== 'all' && g !== activeGroup) return;
+      const filtered = teams.map((t, idx) => ({ ...t, idx, g })).filter(t => !q || t.name.toLowerCase().includes(q));
+      if (!filtered.length) return;
+      const lbl = document.createElement('div');
+      lbl.className = 'group-label';
+      lbl.textContent = `Grupo ${g}`;
+      body.appendChild(lbl);
+      appendTeamGrid(filtered);
+    });
+  }
+
+  document.getElementById('album').appendChild(wrapper);
+}
+
+function buildTeamCard(g, idx, name, flag) {
+  const c = countTeam(g, idx);
+  const card = document.createElement('div');
+  card.className = 'team-card' + (c === 20 ? ' complete' : '');
+  const th = document.createElement('div');
+  th.className = 'team-header';
+  th.innerHTML = `<span class="team-flag">${flag}</span><span class="team-name">${name}</span><span class="team-count${c===20?' full':''}" id="cnt-${g}-${idx}">${c}/20</span>`;
+  card.appendChild(th);
+  const row = document.createElement('div');
+  row.className = 'stickers-row';
+  for (let s = 0; s < 20; s++) {
+    const key = `${g}-${idx}-${s}`;
+    const el = document.createElement('div');
+    el.className = 'sticker' + (s < 2 ? ' is-special' : '') + (owned[key] ? ' owned' : '');
+    el.title = stickerLabels[s];
+    el.textContent = owned[key] ? '✓' : (s === 0 ? '🛡' : s === 1 ? '📸' : s);
+    if (!readOnly) {
+      el.onclick = () => {
+        owned[key] = !owned[key];
+        el.classList.toggle('owned', owned[key]);
+        el.textContent = owned[key] ? '✓' : (s === 0 ? '🛡' : s === 1 ? '📸' : s);
+        saveData(); updateStats();
+        const nc = countTeam(g, idx);
+        const ce = document.getElementById(`cnt-${g}-${idx}`);
+        if (ce) { ce.textContent = nc+'/20'; ce.className = 'team-count'+(nc===20?' full':''); }
+        card.className = 'team-card'+(nc===20?' complete':'');
+      };
+    }
+    row.appendChild(el);
+  }
+  card.appendChild(row);
+  return card;
 }
 
 function buildFilters() {
   const wrap = document.getElementById('filters');
-  const all = document.createElement('button');
-  all.className = 'filter-btn active';
-  all.textContent = 'Todos los grupos';
-  all.onclick = () => { activeFilter = 'all'; updateFilters(); filterTeams(); };
-  wrap.appendChild(all);
-
-  Object.keys(groups).forEach(g => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn';
-    btn.textContent = `Grupo ${g}`;
-    btn.id = `filter-${g}`;
-    btn.onclick = () => { activeFilter = g; updateFilters(); filterTeams(); };
-    wrap.appendChild(btn);
-  });
+  const mk = (label, val) => {
+    const b = document.createElement('button');
+    b.className = 'filter-btn' + (val === 'all' ? ' active' : '');
+    b.textContent = label; b.id = 'fb-' + val;
+    b.onclick = () => {
+      activeGroup = val;
+      document.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      buildTeams();
+    };
+    wrap.appendChild(b);
+  };
+  mk('Todos', 'all');
+  Object.keys(groups).forEach(g => mk('Grupo ' + g, g));
 }
 
-function updateFilters() {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  if (activeFilter === 'all') {
-    document.querySelector('.filter-btn').classList.add('active');
-  } else {
-    const el = document.getElementById(`filter-${activeFilter}`);
-    if (el) el.classList.add('active');
-  }
-}
-
-function filterTeams() {
-  const q = document.getElementById('search').value.toLowerCase();
-  document.querySelectorAll('.group-section').forEach(sec => {
-    const g = sec.dataset.group;
-    if (activeFilter !== 'all' && g !== activeFilter) { sec.style.display = 'none'; return; }
-    let anyVisible = false;
-    sec.querySelectorAll('.team-card').forEach(card => {
-      const name = card.dataset.name.toLowerCase();
-      const show = name.includes(q);
-      card.style.display = show ? '' : 'none';
-      if (show) anyVisible = true;
-    });
-    sec.style.display = anyVisible ? '' : 'none';
-  });
-}
-
-const stickerLabels = ['Escudo', 'Foto grupal', ...Array.from({length:18}, (_,i) => `J${i+1}`)];
-
-function buildAlbum() {
-  const wrap = document.getElementById('album');
-  wrap.innerHTML = '';
-
-  Object.entries(groups).forEach(([g, gdata]) => {
-    const sec = document.createElement('div');
-    sec.className = 'group-section';
-    sec.dataset.group = g;
-
-    const header = document.createElement('div');
-    header.className = 'group-header';
-    header.innerHTML = `<span class="group-label">Grupo ${g}</span>`;
-    sec.appendChild(header);
-
-    const grid = document.createElement('div');
-    grid.className = 'teams-grid';
-
-    gdata.teams.forEach((team, idx) => {
-      const c = countOwned(g, idx);
-      const card = document.createElement('div');
-      card.className = 'team-card' + (c === STICKERS_PER_TEAM ? ' complete' : '');
-      card.id = `card-${g}-${idx}`;
-      card.dataset.name = team;
-
-      const th = document.createElement('div');
-      th.className = 'team-header';
-      th.innerHTML = `
-        <span class="team-flag">${gdata.flags[idx]}</span>
-        <span class="team-name">${team}</span>
-        <span class="team-count${c === STICKERS_PER_TEAM ? ' full' : ''}" id="count-${g}-${idx}">${c}/20</span>
-      `;
-
-      if (!readOnly) {
-        // Quick-complete all on double click header
-        th.title = 'Click en cada figurita para marcarla';
-      }
-
-      const stickersWrap = document.createElement('div');
-      stickersWrap.className = 'stickers-row';
-
-      for (let s = 0; s < STICKERS_PER_TEAM; s++) {
-        const key = stickerKey(g, idx, s);
-        const el = document.createElement('div');
-        el.className = 'sticker' + (owned[key] ? ' owned' : '') + (s < 2 ? ' special' : '');
-        el.title = stickerLabels[s];
-        el.textContent = owned[key] ? '✓' : (s === 0 ? '🛡' : s === 1 ? '📸' : s + '');
-        if (!readOnly) {
-          el.onclick = () => {
-            owned[key] = !owned[key];
-            el.classList.toggle('owned', owned[key]);
-            el.textContent = owned[key] ? '✓' : (s === 0 ? '🛡' : s === 1 ? '📸' : s + '');
-            saveData();
-            updateStats();
-          };
-        }
-        stickersWrap.appendChild(el);
-      }
-
-      card.appendChild(th);
-      card.appendChild(stickersWrap);
-      grid.appendChild(card);
-    });
-
-    sec.appendChild(grid);
-    wrap.appendChild(sec);
-  });
+function buildAll() {
+  document.getElementById('album').innerHTML = '';
+  buildSpecials();
+  buildTeams();
 }
 
 loadData();
 buildFilters();
-buildAlbum();
+buildAll();
 updateStats();
 </script>
 </body>
