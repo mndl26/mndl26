@@ -73,7 +73,7 @@
   .team-card:hover { border-color: #3a4a6a; }
   .team-card.complete { border-color: #1a4a2a; }
   .team-header { display: flex; align-items: center; gap: 8px; padding: 10px 12px 8px; }
-  .team-flag { font-size: 20px; flex-shrink: 0; }
+  .team-flag { width: 28px; height: 20px; flex-shrink: 0; border-radius: 2px; object-fit: cover; }
   .team-name { font-size: 13px; font-weight: 500; flex: 1; line-height: 1.2; }
   .team-count { font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 999px; background: var(--bg); color: var(--muted); flex-shrink: 0; }
   .team-count.full { background: var(--green-dim); color: var(--green); }
@@ -89,10 +89,17 @@
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--gold); color: #0a0f1e; padding: 10px 20px; border-radius: 999px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 999; pointer-events: none; white-space: nowrap; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  @media (max-width: 480px) {
-    .teams-grid { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 600px) {
+    .teams-grid { grid-template-columns: 1fr; }
     .special-grid { grid-template-columns: 1fr 1fr; }
     .topbar { padding: 0.75rem 1rem; }
+    .stickers-row { gap: 3px; padding: 0 8px 8px; }
+    .sticker { width: 26px; height: 26px; font-size: 8px; }
+    .container { padding: 1rem 0.75rem 4rem; }
+    .controls { flex-direction: column; }
+    .search-input { width: 100%; }
+    .filters { gap: 4px; }
+    .filter-btn { padding: 4px 10px; font-size: 11px; }
   }
 </style>
 </head>
@@ -154,18 +161,18 @@ const specials = [
 ];
 
 const groups = {
-  A: [{ name:'México',         flag:'🇲🇽' }, { name:'Sudáfrica',       flag:'🇿🇦' }, { name:'Corea del Sur',  flag:'🇰🇷' }, { name:'Chequia',         flag:'🇨🇿' }],
-  B: [{ name:'Canadá',         flag:'🇨🇦' }, { name:'Qatar',           flag:'🇶🇦' }, { name:'Suiza',          flag:'🇨🇭' }, { name:'Eslovenia',       flag:'🇸🇮' }],
-  C: [{ name:'Brasil',         flag:'🇧🇷' }, { name:'Marruecos',       flag:'🇲🇦' }, { name:'Haití',          flag:'🇭🇹' }, { name:'Escocia',         flag:'🏴󠁧󠁢󠁳󠁣󠁴󠁿' }],
-  D: [{ name:'EE.UU.',         flag:'🇺🇸' }, { name:'Paraguay',        flag:'🇵🇾' }, { name:'Australia',      flag:'🇦🇺' }, { name:'Polonia',         flag:'🇵🇱' }],
-  E: [{ name:'Alemania',       flag:'🇩🇪' }, { name:'Curazao',         flag:'🇨🇼' }, { name:'Costa de Marfil',flag:'🇨🇮' }, { name:'Ecuador',         flag:'🇪🇨' }],
-  F: [{ name:'Países Bajos',   flag:'🇳🇱' }, { name:'Japón',           flag:'🇯🇵' }, { name:'Túnez',          flag:'🇹🇳' }, { name:'Turquía',         flag:'🇹🇷' }],
-  G: [{ name:'Bélgica',        flag:'🇧🇪' }, { name:'Egipto',          flag:'🇪🇬' }, { name:'Irán',           flag:'🇮🇷' }, { name:'Nueva Zelanda',   flag:'🇳🇿' }],
-  H: [{ name:'España',         flag:'🇪🇸' }, { name:'Cabo Verde',      flag:'🇨🇻' }, { name:'Arabia Saudita', flag:'🇸🇦' }, { name:'Uruguay',         flag:'🇺🇾' }],
-  I: [{ name:'Francia',        flag:'🇫🇷' }, { name:'Senegal',         flag:'🇸🇳' }, { name:'Irak',           flag:'🇮🇶' }, { name:'Noruega',         flag:'🇳🇴' }],
-  J: [{ name:'Argentina',      flag:'🇦🇷' }, { name:'Argelia',         flag:'🇩🇿' }, { name:'Austria',        flag:'🇦🇹' }, { name:'Jordania',        flag:'🇯🇴' }],
-  K: [{ name:'Portugal',       flag:'🇵🇹' }, { name:'Uzbekistán',      flag:'🇺🇿' }, { name:'Colombia',       flag:'🇨🇴' }, { name:'R.D. del Congo',  flag:'🇨🇩' }],
-  L: [{ name:'Inglaterra',     flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿' }, { name:'Croacia',         flag:'🇭🇷' }, { name:'Ghana',          flag:'🇬🇭' }, { name:'Panamá',          flag:'🇵🇦' }],
+  A: [{ name:'México',         iso:'mx' }, { name:'Sudáfrica',       iso:'za' }, { name:'Corea del Sur',  iso:'kr' }, { name:'Chequia',         iso:'cz' }],
+  B: [{ name:'Canadá',         iso:'ca' }, { name:'Qatar',           iso:'qa' }, { name:'Suiza',          iso:'ch' }, { name:'Eslovenia',       iso:'si' }],
+  C: [{ name:'Brasil',         iso:'br' }, { name:'Marruecos',       iso:'ma' }, { name:'Haití',          iso:'ht' }, { name:'Escocia',         iso:'gb-sct' }],
+  D: [{ name:'EE.UU.',         iso:'us' }, { name:'Paraguay',        iso:'py' }, { name:'Australia',      iso:'au' }, { name:'Polonia',         iso:'pl' }],
+  E: [{ name:'Alemania',       iso:'de' }, { name:'Curazao',         iso:'cw' }, { name:'Costa de Marfil',iso:'ci' }, { name:'Ecuador',         iso:'ec' }],
+  F: [{ name:'Países Bajos',   iso:'nl' }, { name:'Japón',           iso:'jp' }, { name:'Túnez',          iso:'tn' }, { name:'Turquía',         iso:'tr' }],
+  G: [{ name:'Bélgica',        iso:'be' }, { name:'Egipto',          iso:'eg' }, { name:'Irán',           iso:'ir' }, { name:'Nueva Zelanda',   iso:'nz' }],
+  H: [{ name:'España',         iso:'es' }, { name:'Cabo Verde',      iso:'cv' }, { name:'Arabia Saudita', iso:'sa' }, { name:'Uruguay',         iso:'uy' }],
+  I: [{ name:'Francia',        iso:'fr' }, { name:'Senegal',         iso:'sn' }, { name:'Irak',           iso:'iq' }, { name:'Noruega',         iso:'no' }],
+  J: [{ name:'Argentina',      iso:'ar' }, { name:'Argelia',         iso:'dz' }, { name:'Austria',        iso:'at' }, { name:'Jordania',        iso:'jo' }],
+  K: [{ name:'Portugal',       iso:'pt' }, { name:'Uzbekistán',      iso:'uz' }, { name:'Colombia',       iso:'co' }, { name:'R.D. del Congo',  iso:'cd' }],
+  L: [{ name:'Inglaterra',     iso:'gb-eng' }, { name:'Croacia',     iso:'hr' }, { name:'Ghana',          iso:'gh' }, { name:'Panamá',          iso:'pa' }],
 };
 
 const stickerLabels = Array.from({length:20}, (_,i) => i === 0 ? 'Escudo' : String(i+1));
@@ -321,7 +328,7 @@ function buildTeams() {
   const appendTeamGrid = (teams) => {
     const grid = document.createElement('div');
     grid.className = 'teams-grid';
-    teams.forEach(t => grid.appendChild(buildTeamCard(t.g, t.idx, t.name, t.flag)));
+    teams.forEach(t => grid.appendChild(buildTeamCard(t.g, t.idx, t.name, t.iso)));
     body.appendChild(grid);
   };
 
@@ -355,7 +362,7 @@ function buildTeamCard(g, idx, name, flag) {
   card.className = 'team-card' + (c === 20 ? ' complete' : '');
   const th = document.createElement('div');
   th.className = 'team-header';
-  th.innerHTML = `<span class="team-flag">${flag}</span><span class="team-name">${name}</span><span class="team-count${c===20?' full':''}" id="cnt-${g}-${idx}">${c}/20</span>`;
+  th.innerHTML = `<img class="team-flag" src="https://flagcdn.com/w40/${flag}.png" alt="${name}"><span class="team-name">${name}</span><span class="team-count${c===20?' full':''}" id="cnt-${g}-${idx}">${c}/20</span>`;
   card.appendChild(th);
   const row = document.createElement('div');
   row.className = 'stickers-row';
