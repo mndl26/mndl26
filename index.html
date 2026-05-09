@@ -29,7 +29,7 @@
 
   .container { max-width: 920px; margin: 0 auto; padding: 1.5rem 1rem 4rem; width: 100%; }
 
-  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
+  .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 1rem; }
   .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; text-align: center; }
   .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--gold); line-height: 1; }
   .stat-label { font-size: 11px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -93,7 +93,9 @@
 
   @media (max-width: 600px) {
     .container { padding: 1rem 0.75rem 4rem; }
-    .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .stats-grid .stat-card:nth-child(4) { grid-column: 1; }
+    .stats-grid .stat-card:nth-child(5) { grid-column: 2; }
     .stat-card { padding: 8px 4px; }
     .stat-num { font-size: 22px; }
     .stat-label { font-size: 9px; }
@@ -122,6 +124,7 @@
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-num" id="s-owned">0</div><div class="stat-label">Tengo</div></div>
     <div class="stat-card"><div class="stat-num" id="s-missing">980</div><div class="stat-label">Me faltan</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-repeated">0</div><div class="stat-label">Repetidas</div></div>
     <div class="stat-card"><div class="stat-num" id="s-pct">0%</div><div class="stat-label">Completado</div></div>
     <div class="stat-card"><div class="stat-num" id="s-teams">0/48</div><div class="stat-label">Selecciones</div></div>
   </div>
@@ -258,9 +261,11 @@ function countTeam(g, idx) {
 
 function updateStats() {
   const total = Object.values(owned).filter(v => v >= 1).length;
+  const repeated = Object.values(owned).filter(v => v >= 2).reduce((sum, v) => sum + (v - 1), 0);
   const pct = Math.round((total / TOTAL) * 100);
   document.getElementById('s-owned').textContent = total;
   document.getElementById('s-missing').textContent = TOTAL - total;
+  document.getElementById('s-repeated').textContent = repeated;
   document.getElementById('s-pct').textContent = pct + '%';
   document.getElementById('prog').style.width = pct + '%';
   let ct = 0;
