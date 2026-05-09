@@ -100,12 +100,13 @@
 <div class="topbar">
   <div class="logo">Panini <span>Mundial 2026™</span></div>
   <div class="topbar-right">
-    <span id="readonly-badge" style="display:none;font-size:11px;background:#1a1a3a;color:#8888cc;border:1px solid #2a2a5a;padding:3px 10px;border-radius:999px;">👁 Modo vista</span>
     <button class="btn" onclick="resetAll()" id="btn-reset">Borrar todo</button>
     <button class="btn btn-share" onclick="shareProg()" id="btn-share">⬆ Compartir álbum</button>
   </div>
 </div>
-<div class="view-notice" id="view-notice">👁 Estás viendo el álbum de otra persona — solo podés mirar, no editar.</div>
+<div class="view-notice" id="view-notice">
+  📥 Abriste el álbum de alguien — podés editar y luego mandarle tu link con <strong>⬆ Compartir álbum</strong>. Tus cambios no afectan el álbum original.
+</div>
 
 <div class="container">
   <div class="stats-grid">
@@ -169,24 +170,24 @@ const groups = {
 
 const stickerLabels = Array.from({length:20}, (_,i) => i === 0 ? 'Escudo' : String(i+1));
 
-let owned = {}, readOnly = false, sortMode = 'grupo', activeGroup = 'all';
+let owned = {}, sortMode = 'grupo', activeGroup = 'all';
 
 function loadData() {
   const hash = window.location.hash.slice(1);
   if (hash.startsWith('share=')) {
-    readOnly = true;
+    // Load shared data as starting point, save to local storage so edits persist
     try { owned = JSON.parse(atob(decodeURIComponent(hash.slice(6)))); } catch(e) { owned = {}; }
+    // Save immediately so refreshing keeps the state
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(owned)); } catch(e) {}
+    // Clear hash from URL so subsequent saves don't re-load shared data
+    history.replaceState(null, '', window.location.pathname);
     document.getElementById('view-notice').classList.add('show');
-    document.getElementById('readonly-badge').style.display = 'inline';
-    document.getElementById('btn-share').style.display = 'none';
-    document.getElementById('btn-reset').style.display = 'none';
   } else {
     try { const r = localStorage.getItem(STORAGE_KEY); if (r) owned = JSON.parse(r); } catch(e) { owned = {}; }
   }
 }
 
 function saveData() {
-  if (readOnly) return;
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(owned)); } catch(e) {}
 }
 
@@ -199,7 +200,6 @@ function shareProg() {
 }
 
 function resetAll() {
-  if (readOnly) return;
   if (!confirm('¿Borrar todo el progreso?')) return;
   owned = {}; localStorage.removeItem(STORAGE_KEY);
   buildAll(); updateStats();
@@ -295,13 +295,12 @@ function buildSpecials() {
     const card = document.createElement('div');
     card.className = 'special-card' + ((owned[sp.id] || 0) >= 1 ? ' owned' : '');
     card.innerHTML = `<span class="sc-icon">${sp.icon}</span><span class="sc-name">${sp.name}</span><span class="sc-check">✓</span>`;
-    if (!readOnly) {
+
       card.onclick = () => {
         owned[sp.id] = (owned[sp.id] || 0) >= 1 ? 0 : 1;
         card.classList.toggle('owned', owned[sp.id] >= 1);
         saveData(); updateStats(); updateCount();
       };
-    }
     grid.appendChild(card);
   });
 
@@ -368,7 +367,7 @@ function buildTeamCard(g, idx, name, flag) {
     el.className = 'sticker' + (s === 0 ? ' is-special' : '') + (cnt >= 1 ? ' owned' : '') + (cnt >= 2 ? ' repeated' : '');
     el.title = stickerLabels[s];
     el.innerHTML = `${label}<span class="rep-badge">${cnt >= 2 ? '+' + (cnt - 1) : ''}</span>`;
-    if (!readOnly) {
+
       const updateEl = () => {
         const newCnt = owned[key] || 0;
         el.className = 'sticker' + (s === 0 ? ' is-special' : '') + (newCnt >= 1 ? ' owned' : '') + (newCnt >= 2 ? ' repeated' : '');
@@ -388,7 +387,6 @@ function buildTeamCard(g, idx, name, flag) {
         owned[key] = (owned[key] || 0) <= 0 ? 0 : (owned[key] || 0) - 1;
         updateEl();
       };
-    }
     row.appendChild(el);
   }
   card.appendChild(row);
