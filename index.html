@@ -74,11 +74,11 @@
   .team-card.complete { border-color: #1a4a2a; }
   .team-header { display: flex; align-items: center; gap: 8px; padding: 10px 12px 8px; }
   .team-flag { width: 28px; height: 20px; flex-shrink: 0; border-radius: 2px; object-fit: cover; }
-  .team-name { font-size: 13px; font-weight: 500; flex: 1; line-height: 1.2; }
+  .team-name { font-size: 13px; font-weight: 500; flex: 1; line-height: 1.2; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .team-count { font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 999px; background: var(--bg); color: var(--muted); flex-shrink: 0; }
   .team-count.full { background: var(--green-dim); color: var(--green); }
   .stickers-row { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 10px 10px; }
-  .sticker { width: 28px; height: 28px; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.1s; display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--muted); user-select: none; position: relative; }
+  .sticker { width: 28px; height: 28px; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.1s; display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--muted); user-select: none; position: relative; flex-shrink: 0; }
   .sticker:hover { border-color: var(--gold); }
   .sticker.owned { background: var(--green-dim); border-color: var(--green); color: var(--green); font-size: 11px; font-weight: 500; }
   .sticker.is-special { border-style: dashed; border-color: #4a3a1a; }
@@ -93,11 +93,9 @@
     .teams-grid { grid-template-columns: 1fr; }
     .special-grid { grid-template-columns: 1fr 1fr; }
     .topbar { padding: 0.75rem 1rem; }
-    .stickers-row { gap: 3px; padding: 0 8px 8px; }
-    .sticker { width: 26px; height: 26px; font-size: 8px; }
+    .stickers-row { gap: 3px; padding: 0 8px 10px; }
+    .sticker { width: 24px; height: 24px; font-size: 8px; }
     .container { padding: 1rem 0.75rem 4rem; }
-    .controls { flex-direction: column; }
-    .search-input { width: 100%; }
     .filters { gap: 4px; }
     .filter-btn { padding: 4px 10px; font-size: 11px; }
   }
