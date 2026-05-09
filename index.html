@@ -165,7 +165,7 @@ const groups = {
   L: [{ name:'Inglaterra',     flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿' }, { name:'Croacia',         flag:'🇭🇷' }, { name:'Ghana',          flag:'🇬🇭' }, { name:'Panamá',          flag:'🇵🇦' }],
 };
 
-const stickerLabels = ['🛡 Escudo', '📸 Foto grupal', ...Array.from({length:18}, (_,i) => `J${i+1}`)];
+const stickerLabels = Array.from({length:20}, (_,i) => i === 0 ? 'Escudo' : String(i+1));
 
 let owned = {}, readOnly = false, sortMode = 'grupo', activeGroup = 'all';
 
@@ -361,14 +361,14 @@ function buildTeamCard(g, idx, name, flag) {
   for (let s = 0; s < 20; s++) {
     const key = `${g}-${idx}-${s}`;
     const el = document.createElement('div');
-    el.className = 'sticker' + (s < 2 ? ' is-special' : '') + (owned[key] ? ' owned' : '');
+    el.className = 'sticker' + (s === 0 ? ' is-special' : '') + (owned[key] ? ' owned' : '');
     el.title = stickerLabels[s];
-    el.textContent = owned[key] ? '✓' : (s === 0 ? '🛡' : s === 1 ? '📸' : s);
+    el.textContent = owned[key] ? '✓' : (s === 0 ? '🛡' : s + 1);
     if (!readOnly) {
       el.onclick = () => {
         owned[key] = !owned[key];
         el.classList.toggle('owned', owned[key]);
-        el.textContent = owned[key] ? '✓' : (s === 0 ? '🛡' : s === 1 ? '📸' : s);
+        el.textContent = owned[key] ? '✓' : (s === 0 ? '🛡' : s + 1);
         saveData(); updateStats();
         const nc = countTeam(g, idx);
         const ce = document.getElementById(`cnt-${g}-${idx}`);
