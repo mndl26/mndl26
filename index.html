@@ -55,7 +55,7 @@
   .chevron { font-size: 14px; color: var(--muted); transition: transform 0.25s; display: inline-block; }
   .chevron.open { transform: rotate(180deg); }
   .sec-body { overflow: hidden; transition: max-height 0.35s ease, opacity 0.25s; }
-  .sec-body.open { max-height: 3000px; opacity: 1; }
+  .sec-body.open { max-height: 99999px; opacity: 1; }
   .sec-body.closed { max-height: 0; opacity: 0; pointer-events: none; }
 
   .special-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 8px; padding: 12px 0 20px; }
@@ -70,7 +70,7 @@
 
   .group-label { font-size: 12px; font-weight: 500; color: var(--muted); margin: 1.2rem 0 8px; text-transform: uppercase; letter-spacing: 1px; }
   .teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 8px; }
-  .team-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.15s; }
+  .team-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: visible; transition: border-color 0.15s; }
   .team-card:hover { border-color: #3a4a6a; }
   .team-card.complete { border-color: #1a4a2a; }
   .team-header { display: flex; align-items: center; gap: 8px; padding: 10px 12px 8px; }
